@@ -9,17 +9,20 @@ public class ClientViewModel
     public IList<ProductViewModel>? Products { get; set; }
 }
 
-public class RemanejaOrdemConsultaValidator : AbstractValidator<ClientViewModel>
+public class ClientViewModelValidator : AbstractValidator<ClientViewModel>
 {
-    public RemanejaOrdemConsultaValidator()
+    public ClientViewModelValidator()
     {
-        When(x => x != null, () =>
+        When(x => x == null, () =>
+        {
+            RuleFor(x => x).NotNull();
+        }).Otherwise(() =>
         {
             RuleFor(x => x.Name).NotNull().NotEmpty();
 
-            RuleForEach(x => x.Products).NotNull();
-
             RuleFor(person => person.BirthDate).LessThan(DateTime.Now.AddYears(-18)).WithMessage("Cliente menor que 18 anos");
+
+            RuleForEach(x => x.Products).NotNull();
         });
     }
 }

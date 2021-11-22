@@ -1,4 +1,6 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Sample.FluentValidation.WebApi.Core.Extensions;
 using Sample.FluentValidation.WebApi.Core.ViewModels;
 
 namespace Sample.FluentValidation.WebApi.Controllers;
@@ -7,16 +9,23 @@ namespace Sample.FluentValidation.WebApi.Controllers;
 [Route("[controller]")]
 public class ClientController : ControllerBase
 {
-    private readonly ILogger<ClientController> _logger;
+    private readonly IValidator<ClientViewModel> _validator;
 
-    public ClientController(ILogger<ClientController> logger)
+    public ClientController(IValidator<ClientViewModel> validator)
     {
-        _logger = logger;
+        _validator = validator;
     }
 
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] ClientViewModel model)
     {
+        var validation = await _validator.ValidateAsync(model);
+
+        if (!validation.IsValid)
+        {
+            return BadRequest(validation.GetErrors());
+        }
+
         return Ok();
     }
 }

@@ -8,7 +8,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddFluentValidation(typeof(RemanejaOrdemConsultaValidator));
+builder.Services.AddFluentValidation(typeof(ClientViewModelValidator));
 
 var app = builder.Build();
 
